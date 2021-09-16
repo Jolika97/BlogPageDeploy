@@ -15,6 +15,12 @@ public class ArticleController {
     @Autowired
     ArticleService articleService;
 
+    @RequestMapping("/")
+    @ResponseBody
+    String home() {
+        return "Hello World!";
+    }
+
     /*
     Return a list of all articles
     or
