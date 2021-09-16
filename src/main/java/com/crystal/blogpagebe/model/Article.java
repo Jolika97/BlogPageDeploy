@@ -25,13 +25,13 @@ public class Article {
     @Column(name = "date")
     private String date;
 
-    @Column(name = "imgUrl")
+    @Column(name = "imgurl")
     private String imageURL;
 
     @Column(name = "content")
     private String content;
 
-    @Column(name = "dateTimestamp")
+    @Column(name = "datetimestamp")
     private Timestamp dateTimestamp;
 
     public Article() {
