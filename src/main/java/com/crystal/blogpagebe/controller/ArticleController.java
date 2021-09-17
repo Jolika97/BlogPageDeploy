@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -57,7 +58,7 @@ public class ArticleController {
     }
 
     @PostMapping("/article")
-    public ResponseEntity insertArticle(@RequestBody Article article) {
+    public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
         if (!articleService.existsById(article.getId())) {
             articleService.insert(article);
             return new ResponseEntity("Added successfully.", HttpStatus.OK);
@@ -67,7 +68,7 @@ public class ArticleController {
     }
 
     @PutMapping("/article/{articleId}")
-    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId, @RequestBody Article article) {
+    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId, @Valid @RequestBody Article article) {
         if (articleService.existsById(articleId)) {
             articleService.update(articleId, article);
             return new ResponseEntity("Updated successfully.", HttpStatus.OK);

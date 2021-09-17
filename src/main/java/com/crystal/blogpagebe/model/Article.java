@@ -3,6 +3,7 @@ package com.crystal.blogpagebe.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
@@ -13,24 +14,31 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
     @Column(name = "title")
     private String title;
 
+    @NotNull
     @Column(name = "tag")
     private String tag;
 
+    @NotNull
     @Column(name = "author")
     private String author;
 
+    @NotNull
     @Column(name = "date")
     private String date;
 
+    @NotNull
     @Column(name = "imgUrl")
     private String imageURL;
 
+    @NotNull
     @Column(name = "content")
     private String content;
 
+    @NotNull
     @Column(name = "dateTimestamp")
     private Timestamp dateTimestamp;
 
