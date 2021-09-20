@@ -338,7 +338,7 @@ function renderArticles(articleArray) {
     inputs.item(1).value = data.tag;
     inputs.item(2).value = data.author;
     inputs.item(3).value = data.date;
-    inputs.item(4).value = data.imgUrl;
+    inputs.item(4).value = data.imageURL;
     inputs.item(5).value = data.saying;
 
     document.getElementsByClassName("textarea").item(0).value = data.content;
@@ -351,7 +351,7 @@ function renderArticles(articleArray) {
       tag: inputs.item(1).value,
       author: inputs.item(2).value,
       date: inputs.item(3).value,
-      imgUrl: inputs.item(4).value,
+      imageURL: inputs.item(4).value,
       saying: inputs.item(5).value,
       content: document.getElementsByClassName("textarea").item(0).value,
     };
