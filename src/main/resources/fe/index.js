@@ -401,7 +401,7 @@ function renderArticles(articleArray) {
   }
 
   function renderPage() {
-    document.body.innerHTML = "";
+    location.reload();
     createHeader();
     createAddArticleButton();
 
