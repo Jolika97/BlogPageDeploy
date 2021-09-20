@@ -357,7 +357,7 @@ function renderArticles(articleArray) {
     };
 
     if (id == 0) {
-      fetch(`https://blogpagedeploy.herokuapp.com/articles/articles`, {
+      fetch(`https://blogpagedeploy.herokuapp.com/article`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
