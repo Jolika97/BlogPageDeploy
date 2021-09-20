@@ -1,12 +1,12 @@
 var navArray = ["Travel updates", "Reviews", "About", "Contact"];
 
 var id = 0;
+
 var currentPage = 0;
 
-let container = document.getElementById("root");
-let main = document.createElement("main");
-
 function getArticles(page) {
+  document.getElementById("root").innerHTML = "";
+
   page = page || 0;
 
   fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, {
@@ -31,94 +31,59 @@ function getArticles(page) {
     });
 }
 
-//Header
-function createHeader() {
-  let nav = document.createElement("nav");
-  nav.setAttribute("class", "nav");
-
-  let ul = document.createElement("ul");
-  ul.setAttribute("class", "nav__container");
-
-  navArray.forEach((element) => {
-    let li = document.createElement("li");
-    li.setAttribute("class", "nav__item");
-    li.textContent = element;
-    ul.appendChild(li);
-
-    let a = document.createElement("a");
-    a.setAttribute("class", "nav__link");
-    a.href = "#";
-
-    li.appendChild(a);
-
-    ul.appendChild(li);
-  });
-
-  nav.appendChild(ul);
-  container.appendChild(nav);
-}
-
-//Button
-function createAddArticleButton() {
-  let buttonDiv = document.createElement("div");
-  buttonDiv.setAttribute("class", "add__container");
-
-  let button = document.createElement("button");
-
-  button.setAttribute("class", "button");
-  button.setAttribute("type", "button");
-  button.setAttribute("id", "add-article-button");
-  button.textContent = "+Add article";
-
-  button.addEventListener("click", function () {
-    id = 0;
-  });
-
-  buttonDiv.appendChild(button);
-  container.appendChild(buttonDiv);
-}
-
-function createFooter() {
-  let footer = document.createElement("footer");
-  footer.setAttribute("class", "footer");
-
-  let footerButtonPrevious = document.createElement("button");
-  footerButtonPrevious.setAttribute("class", "footer__link");
-  footerButtonPrevious.textContent = "previous";
-
-  footerButtonPrevious.addEventListener("click", function () {
-    console.log("Calling previous");
-    while (container.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
-
-    currentPage = currentPage - 1;
-    getArticles(currentPage);
-  });
-
-  let footerButtonNext = document.createElement("button");
-  footerButtonNext.setAttribute("class", "footer__link footer__link--next");
-  footerButtonNext.textContent = "next";
-
-  footerButtonNext.addEventListener("click", function () {
-    console.log("Calling next");
-    while (container.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
-
-    currentPage = currentPage + 1;
-    getArticles(currentPage);
-  });
-
-  footer.appendChild(footerButtonPrevious);
-  footer.appendChild(footerButtonNext);
-
-  main.appendChild(footer);
-}
-
 function renderArticles(articleArray) {
   //Starting to create the page
+  let container = document.getElementById("root");
   //Main with articles
+  let main = document.createElement("main");
+
+  //Header
+  function createHeader() {
+    let nav = document.createElement("nav");
+    nav.setAttribute("class", "nav");
+
+    let ul = document.createElement("ul");
+    ul.setAttribute("class", "nav__container");
+
+    navArray.forEach((element) => {
+      let li = document.createElement("li");
+      li.setAttribute("class", "nav__item");
+      li.textContent = element;
+      ul.appendChild(li);
+
+      let a = document.createElement("a");
+      a.setAttribute("class", "nav__link");
+      a.href = "#";
+
+      li.appendChild(a);
+
+      ul.appendChild(li);
+    });
+
+    nav.appendChild(ul);
+    container.appendChild(nav);
+  }
+
+  //Button
+  function createAddArticleButton() {
+    let buttonDiv = document.createElement("div");
+    buttonDiv.setAttribute("class", "add__container");
+
+    let button = document.createElement("button");
+
+    button.setAttribute("class", "button");
+    button.setAttribute("type", "button");
+    button.setAttribute("id", "add-article-button");
+    button.textContent = "+Add article";
+
+    button.addEventListener("click", function () {
+      id = 0;
+    });
+
+    buttonDiv.appendChild(button);
+    container.appendChild(buttonDiv);
+  }
+
   function createArticle(articleArray) {
     articleArray.map((element) => {
       let article = document.createElement("article");
@@ -429,12 +394,38 @@ function renderArticles(articleArray) {
       document.getElementById("modal_overlay").style.display = "none";
     });
 
+  function createFooter() {
+    let footer = document.createElement("footer");
+    footer.setAttribute("class", "footer");
+
+    let footerButtonPrevious = document.createElement("button");
+    footerButtonPrevious.setAttribute("class", "footer__link");
+    footerButtonPrevious.textContent = "previous";
+
+    footerButtonPrevious.addEventListener("click", goToPreviousPage());
+
+    let footerButtonNext = document.createElement("button");
+    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
+    footerButtonNext.textContent = "next";
+
+    footerButtonNext.addEventListener("click", goToNextPage());
+
+    footer.appendChild(footerButtonPrevious);
+    footer.appendChild(footerButtonNext);
+
+    main.appendChild(footer);
+  }
+
   function goToPreviousPage() {
+    console.log("Calling previous");
+
     currentPage = currentPage - 1;
     getArticles(currentPage);
   }
 
   function goToNextPage() {
+    console.log("Calling next");
+
     currentPage = currentPage + 1;
     getArticles(currentPage);
   }
