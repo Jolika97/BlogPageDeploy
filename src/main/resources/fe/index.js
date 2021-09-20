@@ -7,10 +7,7 @@ var startingIndex = 0;
 var id = 0;
 
 function getArticles() {
-  fetch("https://blogpagedeploy.herokuapp.com/articles", {
-    method: "GET",
-    mode: "no-cors",
-  })
+  fetch("https://blogpagedeploy.herokuapp.com/articles", {method: "GET"})
     .then(function (response) {
       if (response.status !== 200) {
         console.log(
@@ -151,10 +148,7 @@ function renderArticles(articleArray) {
 
       //Article image
       let image = document.createElement("img");
-      image.setAttribute(
-        "src",
-        `https://blogpagedeploy.herokuapp.com/${element.imageURL}`
-      );
+      image.setAttribute("src", `https://blogpagedeploy.herokuapp.com/${element.imageURL}`);
 
       article.appendChild(image);
 
