@@ -362,7 +362,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Added successfully!");
-        location.reload();
+        getArticles();
       });
     } else {
       fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
@@ -373,7 +373,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Edited successfully!");
-        location.reload();
+        getArticles();
       });
     }
   }
@@ -382,7 +382,7 @@ function renderArticles(articleArray) {
     fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
       method: "DELETE",
     }).then(function () {
-      location.reload();
+      getArticles();
     });
   }
 
