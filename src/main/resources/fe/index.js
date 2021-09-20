@@ -5,11 +5,16 @@ var articleArrayFromServer = [];
 var startingIndex = 0;
 
 var id = 0;
+var currentPage = 0;
 
-function getArticles() {
+let container = document.getElementById("root");
+let main = document.createElement("main");
+
+function getArticles(page) {
+  page = page || 0;
   document.getElementById("root").innerHTML = "";
 
-  fetch("https://blogpagedeploy.herokuapp.com/articles", { method: "GET" })
+  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, { method: "GET" })
     .then(function (response) {
       if (response.status !== 200) {
         console.log(
@@ -31,60 +36,91 @@ function getArticles() {
     });
 }
 
+//Header
+function createHeader() {
+  let nav = document.createElement("nav");
+  nav.setAttribute("class", "nav");
+
+  let ul = document.createElement("ul");
+  ul.setAttribute("class", "nav__container");
+
+  navArray.forEach((element) => {
+    let li = document.createElement("li");
+    li.setAttribute("class", "nav__item");
+    li.textContent = element;
+    ul.appendChild(li);
+
+    let a = document.createElement("a");
+    a.setAttribute("class", "nav__link");
+    a.href = "#";
+
+    li.appendChild(a);
+
+    ul.appendChild(li);
+  });
+
+  nav.appendChild(ul);
+  container.appendChild(nav);
+}
+
+//Button
+function createAddArticleButton() {
+  let buttonDiv = document.createElement("div");
+  buttonDiv.setAttribute("class", "add__container");
+
+  let button = document.createElement("button");
+
+  button.setAttribute("class", "button");
+  button.setAttribute("type", "button");
+  button.setAttribute("id", "add-article-button");
+  button.textContent = "+Add article";
+
+  button.addEventListener("click", function () {
+    id = 0;
+  });
+
+  buttonDiv.appendChild(button);
+  container.appendChild(buttonDiv);
+}
+
+function createFooter() {
+  let footer = document.createElement("footer");
+  footer.setAttribute("class", "footer");
+
+  let footerButtonPrevious = document.createElement("button");
+  footerButtonPrevious.setAttribute("class", "footer__link");
+  footerButtonPrevious.textContent = "previous";
+
+  if (startingIndex <= 3) {
+    footerButtonPrevious.disabled = true;
+    footerButtonPrevious.style.color = "gray";
+  }
+
+  footerButtonPrevious.addEventListener("click", function () {
+    goToPreviousPage();
+  });
+
+  let footerButtonNext = document.createElement("button");
+  footerButtonNext.setAttribute("class", "footer__link footer__link--next");
+  footerButtonNext.textContent = "next";
+
+  if (startingIndex > articleArray.length - 3) {
+    footerButtonNext.disabled = true;
+    footerButtonNext.style.color = "gray";
+  }
+
+  footerButtonNext.addEventListener("click", function () {
+    goToNextPage();
+  });
+
+  footer.appendChild(footerButtonPrevious);
+  footer.appendChild(footerButtonNext);
+
+  main.appendChild(footer);
+}
+
 function renderArticles(articleArray) {
-  console.log("Render method is called!");
   //Starting to create the page
-  let container = document.getElementById("root");
-
-  //Header
-  function createHeader() {
-    let nav = document.createElement("nav");
-    nav.setAttribute("class", "nav");
-
-    let ul = document.createElement("ul");
-    ul.setAttribute("class", "nav__container");
-
-    navArray.forEach((element) => {
-      let li = document.createElement("li");
-      li.setAttribute("class", "nav__item");
-      li.textContent = element;
-      ul.appendChild(li);
-
-      let a = document.createElement("a");
-      a.setAttribute("class", "nav__link");
-      a.href = "#";
-
-      li.appendChild(a);
-
-      ul.appendChild(li);
-    });
-
-    nav.appendChild(ul);
-    container.appendChild(nav);
-  }
-
-  //Button
-  function createAddArticleButton() {
-    let buttonDiv = document.createElement("div");
-    buttonDiv.setAttribute("class", "add__container");
-
-    let button = document.createElement("button");
-
-    button.setAttribute("class", "button");
-    button.setAttribute("type", "button");
-    button.setAttribute("id", "add-article-button");
-    button.textContent = "+Add article";
-
-    button.addEventListener("click", function () {
-      id = 0;
-    });
-
-    buttonDiv.appendChild(button);
-    container.appendChild(buttonDiv);
-  }
-
-  let main = document.createElement("main");
-
   //Main with articles
   function createArticle(articleArray) {
     articleArray.map((element) => {
@@ -189,41 +225,6 @@ function renderArticles(articleArray) {
     });
   }
 
-  function createFooter() {
-    let footer = document.createElement("footer");
-    footer.setAttribute("class", "footer");
-
-    let footerButtonPrevious = document.createElement("button");
-    footerButtonPrevious.setAttribute("class", "footer__link");
-    footerButtonPrevious.textContent = "previous";
-
-    if (startingIndex <= 3) {
-      footerButtonPrevious.disabled = true;
-      footerButtonPrevious.style.color = "gray";
-    }
-
-    footerButtonPrevious.addEventListener("click", function () {
-      goToPreviousPage(container, footerButtonNext);
-    });
-
-    let footerButtonNext = document.createElement("button");
-    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
-    footerButtonNext.textContent = "next";
-
-    if (startingIndex > articleArray.length - 3) {
-      footerButtonNext.disabled = true;
-      footerButtonNext.style.color = "gray";
-    }
-
-    footerButtonNext.addEventListener("click", function () {
-      goToNextPage(container);
-    });
-
-    footer.appendChild(footerButtonPrevious);
-    footer.appendChild(footerButtonNext);
-
-    main.appendChild(footer);
-  }
 
   function createInput(content) {
     let input = document.createElement("input");
@@ -435,52 +436,14 @@ function renderArticles(articleArray) {
       document.getElementById("modal_overlay").style.display = "none";
     });
 
-  function goToPreviousPage(parent) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
-    var helperArray = [...articleArrayFromServer];
-    var current = helperArray.slice(startingIndex - 3, startingIndex);
-    startingIndex -= 3;
-
-    console.log(startingIndex);
-    console.log("PEVIOUS" + current);
-
-    renderArticles(current);
-
-    window.scrollTo(0, 0);
-
-    document.getElementsByClassName("footer__link").item(1).disabled = false;
-    document.getElementsByClassName("footer__link").item(1).style.color =
-      "black";
+  function goToPreviousPage() {
+    currentPage = currentPage - 1;
+    getArticles(currentPage);
   }
 
-  function goToNextPage(parent) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-    }
-
-    var current = [];
-    var helperArray = [...articleArrayFromServer];
-
-    if (helperArray.length - startingIndex >= 3) {
-      startingIndex += 3;
-      current = helperArray.slice(startingIndex, startingIndex + 3);
-    } else {
-      helperArray.splice(0, 3);
-
-      current = helperArray;
-    }
-    console.log(startingIndex);
-    console.log(current);
-
-    renderArticles(current);
-
-    window.scrollTo(0, 0);
-
-    document.getElementsByClassName("footer__link").item(0).disabled = false;
-    document.getElementsByClassName("footer__link").item(0).style.color =
-      "black";
+  function goToNextPage() {
+    currentPage = currentPage + 1;
+    getArticles(currentPage);
   }
 }
 
