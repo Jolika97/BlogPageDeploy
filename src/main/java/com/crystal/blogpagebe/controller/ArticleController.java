@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -56,8 +57,9 @@ public class ArticleController {
             return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.BAD_REQUEST);
     }
 
+
     @PostMapping("/article")
-    public ResponseEntity insertArticle(@RequestBody Article article) {
+    public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
         if (!articleService.existsById(article.getId())) {
             articleService.insert(article);
             return new ResponseEntity("Added successfully.", HttpStatus.OK);
@@ -67,7 +69,7 @@ public class ArticleController {
     }
 
     @PutMapping("/article/{articleId}")
-    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId, @RequestBody Article article) {
+    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId,@Valid @RequestBody Article article) {
         if (articleService.existsById(articleId)) {
             articleService.update(articleId, article);
             return new ResponseEntity("Updated successfully.", HttpStatus.OK);
@@ -75,4 +77,13 @@ public class ArticleController {
             return new ResponseEntity("Can't be updated ,check if article exist.", HttpStatus.BAD_REQUEST);
     }
 
+
+    @GetMapping("/articlesPerPage")
+    public ResponseEntity findArticlesByPage(@RequestParam(value = "page", required = true, defaultValue = "") int page) {
+        List<Article> articleList = articleService.findArticlesByPage(page * 3);
+        if (!articleList.isEmpty())
+            return new ResponseEntity(articleList, HttpStatus.OK);
+        else
+            return new ResponseEntity("No data found!.", HttpStatus.NOT_FOUND);
+    }
 }

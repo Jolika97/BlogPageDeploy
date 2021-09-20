@@ -13,6 +13,9 @@ public class ArticleService {
     @Autowired
     ArticleRepository articleRepository;
 
+//    @Autowired
+//    ArticlePaginationRepository articlePaginationRepository;
+
     public List<Article> findArticles(String author, String tag, String title, String content, String date) {
         return articleRepository.findByAuthor(author, tag, title, content, date);
     }
@@ -54,4 +57,7 @@ public class ArticleService {
         return articleRepository.existsById(articleId);
     }
 
+    public List<Article> findArticlesByPage(int page) {
+       return articleRepository.getArticlesPerPage(page);
+    }
 }
