@@ -363,6 +363,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Added successfully!");
+        document.body.innerHTML = "";
         getArticles();
       });
     } else {
@@ -374,6 +375,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Edited successfully!");
+        document.body.innerHTML = "";
         getArticles();
       });
     }
@@ -383,6 +385,7 @@ function renderArticles(articleArray) {
     fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
       method: "DELETE",
     }).then(function () {
+      document.body.innerHTML = "";
       getArticles();
     });
   }
