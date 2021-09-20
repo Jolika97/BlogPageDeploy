@@ -311,7 +311,7 @@ function renderArticles(articleArray) {
   }
 
   function getOneArticle(id) {
-    fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`)
+    fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`)
       .then(function (response) {
         if (response.status !== 200) {
           console.log(
@@ -368,7 +368,7 @@ function renderArticles(articleArray) {
         getArticles();
       });
     } else {
-      fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
+      fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
@@ -382,7 +382,7 @@ function renderArticles(articleArray) {
   }
 
   function deleteArticle(id) {
-    fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
+    fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
       method: "DELETE",
     }).then(function () {
       getArticles();
