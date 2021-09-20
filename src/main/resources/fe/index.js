@@ -7,6 +7,8 @@ var startingIndex = 0;
 var id = 0;
 
 function getArticles() {
+  document.getElementById("root").innerHTML = "";
+
   fetch("https://blogpagedeploy.herokuapp.com/articles", { method: "GET" })
     .then(function (response) {
       if (response.status !== 200) {
@@ -363,7 +365,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Added successfully!");
-        document.getElementById("root").innerHTML = "";
+        
         getArticles();
       });
     } else {
@@ -375,7 +377,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Edited successfully!");
-        document.getElementById("root").innerHTML = "";
+        
         getArticles();
       });
     }
@@ -385,7 +387,7 @@ function renderArticles(articleArray) {
     fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
       method: "DELETE",
     }).then(function () {
-      document.getElementById("root").innerHTML = "";
+      
       getArticles();
     });
   }
