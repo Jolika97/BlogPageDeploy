@@ -30,6 +30,7 @@ function getArticles() {
 }
 
 function renderArticles(articleArray) {
+  console.log("Render method is called!");
   //Starting to create the page
   let container = document.getElementById("root");
 
