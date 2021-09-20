@@ -30,6 +30,7 @@ function getArticles() {
 }
 
 function renderArticles(articleArray) {
+  location.reload();
   //Starting to create the page
   let container = document.getElementById("root");
 
@@ -401,7 +402,6 @@ function renderArticles(articleArray) {
   }
 
   function renderPage() {
-    location.reload();
     createHeader();
     createAddArticleButton();
 
