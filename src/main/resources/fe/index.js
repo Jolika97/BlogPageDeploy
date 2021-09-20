@@ -1,9 +1,5 @@
 var navArray = ["Travel updates", "Reviews", "About", "Contact"];
 
-var articleArrayFromServer = [];
-
-var startingIndex = 0;
-
 var id = 0;
 var currentPage = 0;
 
@@ -26,8 +22,6 @@ function getArticles(page) {
       response.json().then(function (data) {
         renderArticles(data);
         console.log(data);
-        articleArrayFromServer = data;
-        console.log(articleArrayFromServer);
       });
     })
 
@@ -91,11 +85,6 @@ function createFooter() {
   footerButtonPrevious.setAttribute("class", "footer__link");
   footerButtonPrevious.textContent = "previous";
 
-  if (startingIndex <= 3) {
-    footerButtonPrevious.disabled = true;
-    footerButtonPrevious.style.color = "gray";
-  }
-
   footerButtonPrevious.addEventListener("click", function () {
     goToPreviousPage();
   });
@@ -103,11 +92,6 @@ function createFooter() {
   let footerButtonNext = document.createElement("button");
   footerButtonNext.setAttribute("class", "footer__link footer__link--next");
   footerButtonNext.textContent = "next";
-
-  if (startingIndex > articleArray.length - 3) {
-    footerButtonNext.disabled = true;
-    footerButtonNext.style.color = "gray";
-  }
 
   footerButtonNext.addEventListener("click", function () {
     goToNextPage();
@@ -411,10 +395,8 @@ function renderArticles(articleArray) {
     createHeader();
     createAddArticleButton();
 
-    let helperArr = [...articleArray];
-    let current = helperArr.slice(0, 3);
-    console.log(current);
-    createArticle(current);
+    createArticle(articleArray);
+
     createFooter();
     createModal();
 
