@@ -155,7 +155,7 @@ function renderArticles(articleArray) {
 
       //Article image
       let image = document.createElement("img");
-      image.setAttribute("src", element.imgUrl);
+      image.setAttribute("src", `https://blogpagedeploy.herokuapp.com/${element.imageURL}`);
 
       article.appendChild(image);
 
