@@ -8,9 +8,10 @@ let main = document.createElement("main");
 
 function getArticles(page) {
   page = page || 0;
-  document.getElementById("root").innerHTML = "";
 
-  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, { method: "GET" })
+  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, {
+    method: "GET",
+  })
     .then(function (response) {
       if (response.status !== 200) {
         console.log(
@@ -86,18 +87,24 @@ function createFooter() {
   footerButtonPrevious.textContent = "previous";
 
   footerButtonPrevious.addEventListener("click", function () {
+    console.log("Calling previous");
+    document.getElementById("root").innerHTML = "";
+
     currentPage = currentPage - 1;
     getArticles(currentPage);
-  }, true);
+  });
 
   let footerButtonNext = document.createElement("button");
   footerButtonNext.setAttribute("class", "footer__link footer__link--next");
   footerButtonNext.textContent = "next";
 
   footerButtonNext.addEventListener("click", function () {
+    console.log("Calling next");
+    document.getElementById("root").innerHTML = "";
+
     currentPage = currentPage + 1;
     getArticles(currentPage);
-  }, true);
+  });
 
   footer.appendChild(footerButtonPrevious);
   footer.appendChild(footerButtonNext);
@@ -210,7 +217,6 @@ function renderArticles(articleArray) {
       main.appendChild(article);
     });
   }
-
 
   function createInput(content) {
     let input = document.createElement("input");
@@ -352,7 +358,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Added successfully!");
-        
+
         getArticles();
       });
     } else {
@@ -364,7 +370,7 @@ function renderArticles(articleArray) {
         body: JSON.stringify(putObject),
       }).then(function () {
         alert("Edited successfully!");
-        
+
         getArticles();
       });
     }
@@ -374,7 +380,6 @@ function renderArticles(articleArray) {
     fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
       method: "DELETE",
     }).then(function () {
-      
       getArticles();
     });
   }
