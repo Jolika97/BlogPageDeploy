@@ -367,6 +367,28 @@ function renderArticles(articleArray) {
     document.getElementsByClassName("textarea").item(0).value = "";
   }
 
+  function createFooter() {
+    let footer = document.createElement("footer");
+    footer.setAttribute("class", "footer");
+
+    let footerButtonPrevious = document.createElement("button");
+    footerButtonPrevious.setAttribute("class", "footer__link");
+    footerButtonPrevious.textContent = "previous";
+
+    footerButtonPrevious.addEventListener("click", goToPreviousPage());
+
+    let footerButtonNext = document.createElement("button");
+    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
+    footerButtonNext.textContent = "next";
+
+    footerButtonNext.addEventListener("click", goToNextPage());
+
+    footer.appendChild(footerButtonPrevious);
+    footer.appendChild(footerButtonNext);
+
+    main.appendChild(footer);
+  }
+
   function renderPage() {
     createHeader();
     createAddArticleButton();
@@ -393,28 +415,6 @@ function renderArticles(articleArray) {
     .addEventListener("click", function () {
       document.getElementById("modal_overlay").style.display = "none";
     });
-
-  function createFooter() {
-    let footer = document.createElement("footer");
-    footer.setAttribute("class", "footer");
-
-    let footerButtonPrevious = document.createElement("button");
-    footerButtonPrevious.setAttribute("class", "footer__link");
-    footerButtonPrevious.textContent = "previous";
-
-    footerButtonPrevious.addEventListener("click", goToPreviousPage());
-
-    let footerButtonNext = document.createElement("button");
-    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
-    footerButtonNext.textContent = "next";
-
-    footerButtonNext.addEventListener("click", goToNextPage());
-
-    footer.appendChild(footerButtonPrevious);
-    footer.appendChild(footerButtonNext);
-
-    main.appendChild(footer);
-  }
 
   function goToPreviousPage() {
     console.log("Calling previous");
