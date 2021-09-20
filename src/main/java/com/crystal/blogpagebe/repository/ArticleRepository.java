@@ -18,6 +18,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "AND a.date LIKE %?5%")
     public List<Article> findByAuthor(String author, String tag, String title, String content, String date);
 
-    @Query (value = "SELECT * FROM articles LIMIT ?1,3", nativeQuery = true)
+    @Query (value = "SELECT * FROM articles OFFSET ?1 LIMIT 3", nativeQuery = true)
     public List<Article> getArticlesPerPage(int page);
 }
