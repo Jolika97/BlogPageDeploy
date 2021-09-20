@@ -24,7 +24,10 @@ function getArticles() {
       }
 
       response.json().then(function (data) {
+        renderArticles(data);
         console.log(data);
+        articleArrayFromServer = data;
+        console.log(articleArrayFromServer);
       });
     })
 
