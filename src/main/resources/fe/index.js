@@ -88,7 +88,9 @@ function createFooter() {
 
   footerButtonPrevious.addEventListener("click", function () {
     console.log("Calling previous");
-    document.getElementById("root").innerHTML = "";
+    while (container.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
 
     currentPage = currentPage - 1;
     getArticles(currentPage);
@@ -100,7 +102,9 @@ function createFooter() {
 
   footerButtonNext.addEventListener("click", function () {
     console.log("Calling next");
-    document.getElementById("root").innerHTML = "";
+    while (container.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
 
     currentPage = currentPage + 1;
     getArticles(currentPage);
