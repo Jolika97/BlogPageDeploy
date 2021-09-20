@@ -86,16 +86,18 @@ function createFooter() {
   footerButtonPrevious.textContent = "previous";
 
   footerButtonPrevious.addEventListener("click", function () {
-    goToPreviousPage();
-  });
+    currentPage = currentPage - 1;
+    getArticles(currentPage);
+  }, true);
 
   let footerButtonNext = document.createElement("button");
   footerButtonNext.setAttribute("class", "footer__link footer__link--next");
   footerButtonNext.textContent = "next";
 
   footerButtonNext.addEventListener("click", function () {
-    goToNextPage();
-  });
+    currentPage = currentPage + 1;
+    getArticles(currentPage);
+  }, true);
 
   footer.appendChild(footerButtonPrevious);
   footer.appendChild(footerButtonNext);
