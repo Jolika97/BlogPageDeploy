@@ -151,7 +151,10 @@ function renderArticles(articleArray) {
 
       //Article image
       let image = document.createElement("img");
-      image.setAttribute("src", element.imageURL);
+      image.setAttribute(
+        "src",
+        `https://blogpagedeploy.herokuapp.com/${element.imageURL}`
+      );
 
       article.appendChild(image);
 
@@ -432,7 +435,7 @@ function renderArticles(articleArray) {
     createAddArticleButton();
 
     createArticle(articleArray);
-    
+
     createModal();
 
     container.appendChild(main);
