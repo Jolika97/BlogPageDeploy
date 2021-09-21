@@ -1,5 +1,7 @@
 var navArray = ["Travel updates", "Reviews", "About", "Contact"];
 
+var articleArrayFromServer = [];
+
 var startingIndex = 0;
 var currentPage = 0;
 var maxPage = 0;
@@ -33,7 +35,7 @@ function getArticles(page = 0) {
 function renderArticles(articleArray) {
   //Starting to create the page
   let container = document.getElementById("root");
-  
+
   //Header
   function createHeader() {
     let nav = document.createElement("nav");
@@ -149,10 +151,7 @@ function renderArticles(articleArray) {
 
       //Article image
       let image = document.createElement("img");
-      image.setAttribute(
-        "src",
-        `https://blogpagedeploy.herokuapp.com/${element.imageURL}`
-      );
+      image.setAttribute("src", element.imageURL);
 
       article.appendChild(image);
 
@@ -188,7 +187,9 @@ function renderArticles(articleArray) {
   }
 
   function getNrOfArticles() {
-    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", { method: "GET" })
+    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", {
+      method: "GET",
+    })
       .then(function (response) {
         if (response.status !== 200) {
           console.log(
@@ -382,9 +383,10 @@ function renderArticles(articleArray) {
         },
         body: JSON.stringify(putObject),
       }).then(function () {
-        alert("Added successfully!");
+        currentPage = 0;
+        getArticles(currentPage);
 
-        getArticles();
+        alert("Added successfully!");
       });
     } else {
       fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
@@ -394,9 +396,10 @@ function renderArticles(articleArray) {
         },
         body: JSON.stringify(putObject),
       }).then(function () {
-        alert("Edited successfully!");
+        currentPage = 0;
+        getArticles(currentPage);
 
-        getArticles();
+        alert("Edited successfully!");
       });
     }
   }
@@ -405,7 +408,8 @@ function renderArticles(articleArray) {
     fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
       method: "DELETE",
     }).then(function () {
-      getArticles();
+      currentPage = 0;
+      getArticles(currentPage);
     });
   }
 
@@ -423,34 +427,12 @@ function renderArticles(articleArray) {
     document.getElementsByClassName("textarea").item(0).value = "";
   }
 
-  function createFooter() {
-    let footer = document.createElement("footer");
-    footer.setAttribute("class", "footer");
-
-    let footerButtonPrevious = document.createElement("button");
-    footerButtonPrevious.setAttribute("class", "footer__link");
-    footerButtonPrevious.textContent = "previous";
-
-    footerButtonPrevious.addEventListener("click", goToPreviousPage());
-
-    let footerButtonNext = document.createElement("button");
-    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
-    footerButtonNext.textContent = "next";
-
-    footerButtonNext.addEventListener("click", goToNextPage());
-
-    footer.appendChild(footerButtonPrevious);
-    footer.appendChild(footerButtonNext);
-
-    main.appendChild(footer);
-  }
-
   function renderPage() {
     createHeader();
     createAddArticleButton();
 
     createArticle(articleArray);
-
+    
     createModal();
 
     container.appendChild(main);
