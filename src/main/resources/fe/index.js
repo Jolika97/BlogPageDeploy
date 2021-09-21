@@ -375,7 +375,7 @@ function renderArticles(articleArray) {
     };
 
     if (id == 0) {
-      fetch(`https://blogpagedeploy.herokuapp.com/article`, {
+      fetch(`https://blogpagedeploy.herokuapp.com/articles`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
