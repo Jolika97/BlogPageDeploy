@@ -20,4 +20,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     @Query (value = "SELECT * FROM articles OFFSET ?1 LIMIT 3", nativeQuery = true)
     public List<Article> getArticlesPerPage(int page);
+
+    @Query(value = "SELECT count(a) FROM Article a")
+    public int countAll();
 }

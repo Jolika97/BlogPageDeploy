@@ -1,13 +1,13 @@
 var navArray = ["Travel updates", "Reviews", "About", "Contact"];
 
+var startingIndex = 0;
+var currentPage = 0;
+var maxPage = 0;
+
 var id = 0;
 
-var currentPage = 0;
-
-function getArticles(page) {
+function getArticles(page = 0) {
   document.getElementById("root").innerHTML = "";
-
-  page = page || 0;
 
   fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, {
     method: "GET",
@@ -22,7 +22,6 @@ function getArticles(page) {
 
       response.json().then(function (data) {
         renderArticles(data);
-        console.log(data);
       });
     })
 
@@ -34,9 +33,7 @@ function getArticles(page) {
 function renderArticles(articleArray) {
   //Starting to create the page
   let container = document.getElementById("root");
-  //Main with articles
-  let main = document.createElement("main");
-
+  
   //Header
   function createHeader() {
     let nav = document.createElement("nav");
@@ -83,6 +80,9 @@ function renderArticles(articleArray) {
     buttonDiv.appendChild(button);
     container.appendChild(buttonDiv);
   }
+
+  //Main with articles
+  let main = document.createElement("main");
 
   function createArticle(articleArray) {
     articleArray.map((element) => {
@@ -187,6 +187,62 @@ function renderArticles(articleArray) {
     });
   }
 
+  function getNrOfArticles() {
+    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", { method: "GET" })
+      .then(function (response) {
+        if (response.status !== 200) {
+          console.log(
+            "Looks like there was a problem. Status Code: " + response.status
+          );
+          return;
+        }
+
+        response.json().then(function (data) {
+          maxPage = Math.floor(data / 3);
+          createFooter(maxPage);
+        });
+      })
+
+      .catch(function (err) {
+        console.log("Fetch Error :-S", err);
+      });
+  }
+
+  getNrOfArticles();
+
+  function createFooter(maxPage) {
+    let footer = document.createElement("footer");
+    footer.setAttribute("class", "footer");
+
+    let footerButtonPrevious = document.createElement("button");
+    footerButtonPrevious.setAttribute("class", "footer__link");
+    footerButtonPrevious.setAttribute("id", "footer__link");
+    footerButtonPrevious.textContent = "previous";
+
+    if (currentPage == 0) {
+      footerButtonPrevious.style.visibility = "hidden";
+    }
+
+    footerButtonPrevious.addEventListener("click", goToPreviousPage);
+
+    let footerButtonNext = document.createElement("button");
+    footerButtonNext.setAttribute("class", "footer__link footer__link--next");
+    footerButtonNext.setAttribute("id", "footer__link--next");
+    footerButtonNext.textContent = "next";
+
+    console.log(maxPage);
+    if (currentPage == maxPage) {
+      footerButtonNext.style.visibility = "hidden";
+    }
+
+    footerButtonNext.addEventListener("click", goToNextPage);
+
+    footer.appendChild(footerButtonPrevious);
+    footer.appendChild(footerButtonNext);
+
+    main.appendChild(footer);
+  }
+
   function createInput(content) {
     let input = document.createElement("input");
     input.setAttribute("type", "text");
@@ -273,7 +329,7 @@ function renderArticles(articleArray) {
   }
 
   function getOneArticle(id) {
-    fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`)
+    fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`)
       .then(function (response) {
         if (response.status !== 200) {
           console.log(
@@ -331,7 +387,7 @@ function renderArticles(articleArray) {
         getArticles();
       });
     } else {
-      fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
+      fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
@@ -346,7 +402,7 @@ function renderArticles(articleArray) {
   }
 
   function deleteArticle(id) {
-    fetch(`https://blogpagedeploy.herokuapp.com/article/${id}`, {
+    fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
       method: "DELETE",
     }).then(function () {
       getArticles();
@@ -395,7 +451,6 @@ function renderArticles(articleArray) {
 
     createArticle(articleArray);
 
-    createFooter();
     createModal();
 
     container.appendChild(main);
@@ -417,15 +472,11 @@ function renderArticles(articleArray) {
     });
 
   function goToPreviousPage() {
-    console.log("Calling previous");
-
     currentPage = currentPage - 1;
     getArticles(currentPage);
   }
 
   function goToNextPage() {
-    console.log("Calling next");
-
     currentPage = currentPage + 1;
     getArticles(currentPage);
   }

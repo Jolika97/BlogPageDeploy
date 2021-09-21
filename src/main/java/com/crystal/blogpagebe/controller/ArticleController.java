@@ -40,7 +40,7 @@ public class ArticleController {
             return new ResponseEntity("No data found!.", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/article/{articleId}")
+    @GetMapping("/articles/{articleId}")
     public ResponseEntity getArticleById(@PathVariable(value = "articleId") Integer articleId) {
         if (articleService.existsById(articleId)) {
             return new ResponseEntity(articleService.findArticleById(articleId), HttpStatus.OK);
@@ -48,7 +48,7 @@ public class ArticleController {
             return new ResponseEntity("An article with this ID does not exist.", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/article/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public ResponseEntity deleteArticleById(@PathVariable(value = "articleId") Integer articleId) {
         if (articleService.existsById(articleId)) {
             articleService.deleteArticle(articleId);
@@ -57,8 +57,7 @@ public class ArticleController {
             return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.BAD_REQUEST);
     }
 
-
-    @PostMapping("/article")
+    @PostMapping("/articles")
     public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
         if (!articleService.existsById(article.getId())) {
             articleService.insert(article);
@@ -68,8 +67,8 @@ public class ArticleController {
 
     }
 
-    @PutMapping("/article/{articleId}")
-    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId,@Valid @RequestBody Article article) {
+    @PutMapping("/articles/{articleId}")
+    public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId, @Valid @RequestBody Article article) {
         if (articleService.existsById(articleId)) {
             articleService.update(articleId, article);
             return new ResponseEntity("Updated successfully.", HttpStatus.OK);
@@ -77,13 +76,17 @@ public class ArticleController {
             return new ResponseEntity("Can't be updated ,check if article exist.", HttpStatus.BAD_REQUEST);
     }
 
-
     @GetMapping("/articlesPerPage")
-    public ResponseEntity findArticlesByPage(@RequestParam(value = "page", required = true, defaultValue = "") int page) {
+    public ResponseEntity findArticlesByPage(@RequestParam(value = "page", required = true, defaultValue = "0") int page) {
         List<Article> articleList = articleService.findArticlesByPage(page * 3);
         if (!articleList.isEmpty())
             return new ResponseEntity(articleList, HttpStatus.OK);
         else
             return new ResponseEntity("No data found!.", HttpStatus.NOT_FOUND);
+    }
+    
+    @GetMapping("/articles/numbers")
+    public ResponseEntity getNumberOfArticles(){
+        return new ResponseEntity(articleService.getNoOfArticles(), HttpStatus.OK);
     }
 }
