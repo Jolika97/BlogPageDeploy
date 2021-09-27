@@ -32,8 +32,9 @@ public class ArticleController {
                                        @RequestParam(value = "tag", required = false, defaultValue = "") String tag,
                                        @RequestParam(value = "title", required = false, defaultValue = "") String title,
                                        @RequestParam(value = "content", required = false, defaultValue = "") String content,
-                                       @RequestParam(value = "date", required = false, defaultValue = "") String date) {
-        List<Article> articleList = articleService.findArticles(author, tag, title, content, date);
+                                       @RequestParam(value = "date", required = false, defaultValue = "") String date,
+                                       @RequestParam(value = "page", required = true, defaultValue = "0") int page) {
+        List<Article> articleList = articleService.findArticles(author, tag, title, content, date, page);
         if (!articleList.isEmpty())
             return new ResponseEntity(articleList, HttpStatus.OK);
         else
@@ -76,17 +77,8 @@ public class ArticleController {
             return new ResponseEntity("Can't be updated ,check if article exist.", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/articlesPerPage")
-    public ResponseEntity findArticlesByPage(@RequestParam(value = "page", required = true, defaultValue = "0") int page) {
-        List<Article> articleList = articleService.findArticlesByPage(page * 3);
-        if (!articleList.isEmpty())
-            return new ResponseEntity(articleList, HttpStatus.OK);
-        else
-            return new ResponseEntity("No data found!.", HttpStatus.NOT_FOUND);
-    }
-    
     @GetMapping("/articles/numbers")
-    public ResponseEntity getNumberOfArticles(){
+    public ResponseEntity getNumberOfArticles() {
         return new ResponseEntity(articleService.getNoOfArticles(), HttpStatus.OK);
     }
 }

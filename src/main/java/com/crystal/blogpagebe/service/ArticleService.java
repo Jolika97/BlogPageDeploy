@@ -3,6 +3,7 @@ package com.crystal.blogpagebe.service;
 import com.crystal.blogpagebe.model.Article;
 import com.crystal.blogpagebe.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public class ArticleService {
     @Autowired
     ArticleRepository articleRepository;
 
-    public List<Article> findArticles(String author, String tag, String title, String content, String date) {
-        return articleRepository.findByAuthor(author, tag, title, content, date);
+    public List<Article> findArticles(String author, String tag, String title, String content, String date, int page) {
+        return articleRepository.findByAuthor(author, tag, title, content, date, PageRequest.of(page, 3));
     }
 
     public Article findArticleById(int articleId) {
@@ -54,11 +55,7 @@ public class ArticleService {
         return articleRepository.existsById(articleId);
     }
 
-    public List<Article> findArticlesByPage(int page) {
-       return articleRepository.getArticlesPerPage(page);
-    }
-
-    public int getNoOfArticles(){
+    public int getNoOfArticles() {
         return articleRepository.countAll();
     }
 }

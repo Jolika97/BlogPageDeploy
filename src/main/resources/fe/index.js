@@ -8,12 +8,13 @@ var maxPage = 0;
 
 var id = 0;
 
-function getArticles(page = 0) {
-  document.getElementById("root").innerHTML = "";
+let container = document.getElementById("root");
 
-  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, {
-    method: "GET",
-  })
+function getArticles(page = 0) {
+  showMessage();
+  // document.getElementById("root").innerHTML = "...loading";
+
+  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, { method: "GET" })
     .then(function (response) {
       if (response.status !== 200) {
         console.log(
@@ -32,10 +33,17 @@ function getArticles(page = 0) {
     });
 }
 
-function renderArticles(articleArray) {
-  //Starting to create the page
-  let container = document.getElementById("root");
+function showMessage() {
+  container.textContent = "...loading";
+}
 
+function removeMessage() {
+  container.textContent = "";
+}
+
+function renderArticles(articleArray) {
+  removeMessage();
+  //Starting to create the page
   //Header
   function createHeader() {
     let nav = document.createElement("nav");
@@ -151,10 +159,7 @@ function renderArticles(articleArray) {
 
       //Article image
       let image = document.createElement("img");
-      image.setAttribute(
-        "src",
-        `https://blogpagedeploy.herokuapp.com/${element.imageURL}`
-      );
+      image.setAttribute("src", `https://blogpagedeploy.herokuapp.com/${element.imageURL}`);
 
       article.appendChild(image);
 
@@ -176,8 +181,9 @@ function renderArticles(articleArray) {
       buttonReadMore.textContent = "Read More";
 
       buttonReadMore.addEventListener("click", function () {
-        id = element.id;
-        getOneArticle(element.id);
+        // id = element.id;
+        // getOneArticle(element.id);
+        alert("Feature not implemented yet...");
       });
 
       articleReadMore.appendChild(buttonReadMore);
@@ -190,9 +196,7 @@ function renderArticles(articleArray) {
   }
 
   function getNrOfArticles() {
-    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", {
-      method: "GET",
-    })
+    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", { method: "GET" })
       .then(function (response) {
         if (response.status !== 200) {
           console.log(
@@ -202,7 +206,10 @@ function renderArticles(articleArray) {
         }
 
         response.json().then(function (data) {
-          maxPage = Math.floor(data / 3);
+          if (data % 3 === 0) maxPage = Math.floor(data / 3) - 1;
+          else maxPage = Math.floor(data / 3);
+
+          console.log("Number of pages: " + maxPage);
           createFooter(maxPage);
         });
       })
@@ -247,10 +254,14 @@ function renderArticles(articleArray) {
     main.appendChild(footer);
   }
 
-  function createInput(content) {
+  function createInput(content, maxLengthNumber) {
     let input = document.createElement("input");
     input.setAttribute("type", "text");
+    input.setAttribute("minLength", "1");
     input.setAttribute("class", "input");
+    input.setAttribute("required", "");
+    input.maxLength = maxLengthNumber;
+    input.required = true;
     input.placeholder = "Please enter " + content;
     return input;
   }
@@ -281,12 +292,12 @@ function renderArticles(articleArray) {
     input_container.setAttribute("class", "inputs__container");
 
     input_container.append(
-      createInput("title"),
-      createInput("tag"),
-      createInput("author"),
-      createInput("date"),
-      createInput("image url"),
-      createInput("saying")
+      createInput("title", "225"),
+      createInput("tag", "255"),
+      createInput("author", "255"),
+      createInput("date", "255"),
+      createInput("image url", "1000"),
+      createInput("saying", "10000")
     );
 
     let textarea = document.createElement("textarea");
@@ -368,6 +379,7 @@ function renderArticles(articleArray) {
 
   function saveArticle(id) {
     let inputs = document.getElementsByClassName("input");
+
     const putObject = {
       title: inputs.item(0).value,
       tag: inputs.item(1).value,
@@ -378,32 +390,45 @@ function renderArticles(articleArray) {
       content: document.getElementsByClassName("textarea").item(0).value,
     };
 
-    if (id == 0) {
-      fetch(`https://blogpagedeploy.herokuapp.com/articles`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(putObject),
-      }).then(function () {
-        currentPage = 0;
-        getArticles(currentPage);
+    if (
+      putObject.title !== "" &&
+      putObject.tag !== "" &&
+      putObject.author !== "" &&
+      putObject.date !== "" &&
+      putObject.imageURL !== "" &&
+      putObject.saying !== "" &&
+      putObject.content !== ""
+    ) {
+      if (id == 0) {
+        fetch(`https://blogpagedeploy.herokuapp.com/articles`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(putObject),
+        }).then(function () {
+          currentPage = 0;
+          getArticles(currentPage);
 
-        alert("Added successfully!");
-      });
+          alert("Added successfully!");
+        });
+      } else {
+        fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(putObject),
+        }).then(function () {
+          currentPage = 0;
+          getArticles(currentPage);
+
+          alert("Edited successfully!");
+        });
+      }
     } else {
-      fetch(`https://blogpagedeploy.herokuapp.com/articles/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(putObject),
-      }).then(function () {
-        currentPage = 0;
-        getArticles(currentPage);
-
-        alert("Edited successfully!");
-      });
+      alert("Please fill all the inputs!");
+      return;
     }
   }
 
@@ -435,7 +460,7 @@ function renderArticles(articleArray) {
     createAddArticleButton();
 
     createArticle(articleArray);
-
+    // createFooter();
     createModal();
 
     container.appendChild(main);

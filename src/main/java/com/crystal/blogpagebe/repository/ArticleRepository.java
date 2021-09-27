@@ -1,6 +1,7 @@
 package com.crystal.blogpagebe.repository;
 
 import com.crystal.blogpagebe.model.Article;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,11 +16,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
             "AND a.tag LIKE %?2% " +
             "AND a.title LIKE %?3%" +
             "AND a.content LIKE %?4%" +
-            "AND a.date LIKE %?5%")
-    public List<Article> findByAuthor(String author, String tag, String title, String content, String date);
-
-    @Query (value = "SELECT * FROM articles OFFSET ?1 LIMIT 3", nativeQuery = true)
-    public List<Article> getArticlesPerPage(int page);
+            "AND a.date LIKE %?5%" +
+            "ORDER BY a.id ASC")
+    public List<Article> findByAuthor(String author, String tag, String title, String content, String date, Pageable pageable);
 
     @Query(value = "SELECT count(a) FROM Article a")
     public int countAll();
