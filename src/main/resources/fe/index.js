@@ -14,7 +14,7 @@ function getArticles(page = 0) {
   showMessage();
   // document.getElementById("root").innerHTML = "...loading";
 
-  fetch(`https://blogpagedeploy.herokuapp.com/articlesPerPage?page=${page}`, { method: "GET" })
+  fetch(`https://blogpagedeploy.herokuapp.com/articles?page=${page}`, { method: "GET" })
     .then(function (response) {
       if (response.status !== 200) {
         console.log(
