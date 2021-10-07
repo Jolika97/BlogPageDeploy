@@ -53,19 +53,18 @@ public class ArticleController {
     public ResponseEntity deleteArticleById(@PathVariable(value = "articleId") Integer articleId) {
         if (articleService.existsById(articleId)) {
             articleService.deleteArticle(articleId);
-            return new ResponseEntity("Article successfully deleted", HttpStatus.CREATED);
+            return new ResponseEntity("Article successfully deleted", HttpStatus.OK);
         } else
             return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/articles")
     public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
-        if (!articleService.existsById(article.getId())) {
+        if (article.getId() != 0) {
             articleService.insert(article);
-            return new ResponseEntity("Added successfully.", HttpStatus.OK);
+            return new ResponseEntity("Added successfully.", HttpStatus.CREATED);
         } else
             return new ResponseEntity("Can't be added ,check if article exist.", HttpStatus.BAD_REQUEST);
-
     }
 
     @PutMapping("/articles/{articleId}")
