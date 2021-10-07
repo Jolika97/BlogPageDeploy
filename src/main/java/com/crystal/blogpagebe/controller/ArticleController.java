@@ -60,7 +60,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
-        if (article.getId() != 0) {
+        if (article.getId() == 0) {
             articleService.insert(article);
             return new ResponseEntity("Added successfully.", HttpStatus.CREATED);
         } else
