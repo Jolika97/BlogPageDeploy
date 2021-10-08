@@ -165,14 +165,12 @@ class BlogPageBeApplicationTests {
 
     @Test
     public void testNumberOfArticlesAPI() {
-        Response articleResponse = given().baseUri("https://blogpagedeploy.herokuapp.com")
+        given().baseUri("https://blogpagedeploy.herokuapp.com")
                 .contentType(ContentType.JSON)
                 .when()
-                .put("/articles/numbers")
-                .thenReturn();
-
-        Assert.assertEquals(200, articleResponse.getStatusCode());
-        Assert.assertEquals(6, articleResponse.getBody());
+                .get("/articles/numbers")
+                .then()
+                .statusCode(HttpStatus.SC_OK);
     }
 
 }
