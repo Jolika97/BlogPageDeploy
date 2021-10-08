@@ -168,7 +168,7 @@ class BlogPageBeApplicationTests {
         given().baseUri("https://blogpagedeploy.herokuapp.com")
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/articles/numbers")
+                .get("/articles/count")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
