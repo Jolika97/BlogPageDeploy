@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class ArticleController {
 
@@ -55,7 +56,7 @@ public class ArticleController {
             articleService.deleteArticle(articleId);
             return new ResponseEntity("Article successfully deleted", HttpStatus.OK);
         } else
-            return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/articles")
@@ -76,7 +77,7 @@ public class ArticleController {
             return new ResponseEntity("Can't be updated ,check if article exist.", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/articles/numbers")
+    @GetMapping("/articles/count")
     public ResponseEntity getNumberOfArticles() {
         return new ResponseEntity(articleService.getNoOfArticles(), HttpStatus.OK);
     }
