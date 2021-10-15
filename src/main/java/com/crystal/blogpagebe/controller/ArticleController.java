@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class ArticleController {
 
@@ -32,42 +33,42 @@ public class ArticleController {
                                        @RequestParam(value = "tag", required = false, defaultValue = "") String tag,
                                        @RequestParam(value = "title", required = false, defaultValue = "") String title,
                                        @RequestParam(value = "content", required = false, defaultValue = "") String content,
-                                       @RequestParam(value = "date", required = false, defaultValue = "") String date) {
-        List<Article> articleList = articleService.findArticles(author, tag, title, content, date);
+                                       @RequestParam(value = "date", required = false, defaultValue = "") String date,
+                                       @RequestParam(value = "page", required = true, defaultValue = "0") int page) {
+        List<Article> articleList = articleService.findArticles(author, tag, title, content, date, page);
         if (!articleList.isEmpty())
             return new ResponseEntity(articleList, HttpStatus.OK);
         else
             return new ResponseEntity("No data found!.", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/article/{articleId}")
+    @GetMapping("/articles/{articleId}")
     public ResponseEntity getArticleById(@PathVariable(value = "articleId") Integer articleId) {
         if (articleService.existsById(articleId)) {
             return new ResponseEntity(articleService.findArticleById(articleId), HttpStatus.OK);
         } else
-            return new ResponseEntity("An article with this ID does not exist.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("An article with this ID does not exist.", HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/article/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public ResponseEntity deleteArticleById(@PathVariable(value = "articleId") Integer articleId) {
         if (articleService.existsById(articleId)) {
             articleService.deleteArticle(articleId);
             return new ResponseEntity("Article successfully deleted", HttpStatus.OK);
         } else
-            return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("An article with this ID does not exist therefore it can not be deleted.", HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/article")
+    @PostMapping("/articles")
     public ResponseEntity insertArticle(@Valid @RequestBody Article article) {
-        if (!articleService.existsById(article.getId())) {
+        if (article.getId() == 0) {
             articleService.insert(article);
-            return new ResponseEntity("Added successfully.", HttpStatus.OK);
+            return new ResponseEntity("Added successfully.", HttpStatus.CREATED);
         } else
             return new ResponseEntity("Can't be added ,check if article exist.", HttpStatus.BAD_REQUEST);
-
     }
 
-    @PutMapping("/article/{articleId}")
+    @PutMapping("/articles/{articleId}")
     public ResponseEntity updateArticle(@PathVariable(value = "articleId") Integer articleId, @Valid @RequestBody Article article) {
         if (articleService.existsById(articleId)) {
             articleService.update(articleId, article);
@@ -76,4 +77,8 @@ public class ArticleController {
             return new ResponseEntity("Can't be updated ,check if article exist.", HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/articles/count")
+    public ResponseEntity getNumberOfArticles() {
+        return new ResponseEntity(articleService.getNoOfArticles(), HttpStatus.OK);
+    }
 }
