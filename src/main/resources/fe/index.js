@@ -196,7 +196,7 @@ function renderArticles(articleArray) {
   }
 
   function getNrOfArticles() {
-    fetch("https://blogpagedeploy.herokuapp.com/articles/numbers", { method: "GET" })
+    fetch("https://blogpagedeploy.herokuapp.com/articles/count", { method: "GET" })
       .then(function (response) {
         if (response.status !== 200) {
           console.log(
