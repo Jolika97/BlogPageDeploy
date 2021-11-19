@@ -197,6 +197,10 @@ img {
     height: 700px;
     background: var(--white-color);
     box-shadow: 0 0 26px 6px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .modal__content {

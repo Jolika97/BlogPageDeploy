@@ -209,7 +209,6 @@ function renderArticles(articleArray) {
           if (data % 3 === 0) maxPage = Math.floor(data / 3) - 1;
           else maxPage = Math.floor(data / 3);
 
-          console.log("Number of pages: " + maxPage);
           createFooter(maxPage);
         });
       })
@@ -241,7 +240,6 @@ function renderArticles(articleArray) {
     footerButtonNext.setAttribute("id", "footer__link--next");
     footerButtonNext.textContent = "next";
 
-    console.log(maxPage);
     if (currentPage == maxPage) {
       footerButtonNext.style.visibility = "hidden";
     }
